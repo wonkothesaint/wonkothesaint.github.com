@@ -384,8 +384,7 @@ var controller = (function(CubeCtrl, UICtrl) {
         x: 0,
         y: 0
     }
-    
-    var startTrack = function(event){
+        var startTrack = function(event){
         element_first_class = event.target.className.split(' ')[0]
         if (element_first_class=='plastic'){
             return 0
@@ -402,6 +401,26 @@ var controller = (function(CubeCtrl, UICtrl) {
         }
     }
     
+    var stopTrack = function(event){
+        mouse_pos.x = event.clientX
+        mouse_pos.y = event.clientY
+        mouse_pos.tracking = ''   
+    }
+    
+    var applyTrack = function(event){
+        if (mouse_pos.tracking == 'cube'){
+            UICtrl.rotateCube({x:event.clientX, y:event.clientY}, {x:mouse_pos.x,y:mouse_pos.y})
+            mouse_pos.x = event.clientX
+            mouse_pos.y = event.clientY
+        }
+        if (mouse_pos.tracking == 'face'){
+            UICtrl.rotateFace(mouse_pos.sticker_el, {x:event.clientX, y:event.clientY}, {x:mouse_pos.x,y:mouse_pos.y})
+            mouse_pos.x = event.clientX
+            mouse_pos.y = event.clientY
+            mouse_pos.tracking = ''
+        }
+    }
+    
     var setupEventListeners = function(){
         document.addEventListener('mousedown', function(event) {
             startTrack(event)
@@ -410,22 +429,17 @@ var controller = (function(CubeCtrl, UICtrl) {
             startTrack(event)
         }); 
         document.addEventListener('mouseup', function(event) {
-            mouse_pos.x = event.clientX
-            mouse_pos.y = event.clientY
-            mouse_pos.tracking = ''   
+            stopTrack(event)
         });  
+        document.addEventListener('touchend touchleave touchcancel', function(event) {
+            stopTrack(event)
+        });  
+        
         document.addEventListener('mousemove', function(event) {
-            if (mouse_pos.tracking == 'cube'){
-                UICtrl.rotateCube({x:event.clientX, y:event.clientY}, {x:mouse_pos.x,y:mouse_pos.y})
-                mouse_pos.x = event.clientX
-                mouse_pos.y = event.clientY
-            }
-            if (mouse_pos.tracking == 'face'){
-                UICtrl.rotateFace(mouse_pos.sticker_el, {x:event.clientX, y:event.clientY}, {x:mouse_pos.x,y:mouse_pos.y})
-                mouse_pos.x = event.clientX
-                mouse_pos.y = event.clientY
-                mouse_pos.tracking = ''
-            }
+            applyTrack(event)
+        });  
+        document.addEventListener('touchmove', function(event) {
+            applyTrack(event)
         });  
         
     }
