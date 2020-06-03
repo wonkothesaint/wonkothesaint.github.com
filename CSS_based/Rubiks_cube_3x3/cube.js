@@ -404,6 +404,9 @@ var controller = (function(CubeCtrl, UICtrl) {
                 mouse_pos.tracking = 'cube'   
             }
         });  
+        document.addEventListener('touchstart', function(event) {
+            UICtrl.rotateCube({0, 0}, {10,0})  
+        });
         document.addEventListener('mouseup', function(event) {
             mouse_pos.x = event.clientX
             mouse_pos.y = event.clientY
