@@ -385,25 +385,30 @@ var controller = (function(CubeCtrl, UICtrl) {
         y: 0
     }
     
-    
+    var startTrack = function(event){
+        element_first_class = event.target.className.split(' ')[0]
+        if (element_first_class=='plastic'){
+            return 0
+        }
+        if (element_first_class=='sticker'){
+            mouse_pos.sticker_el = event.target
+            mouse_pos.x = event.clientX
+            mouse_pos.y = event.clientY
+            mouse_pos.tracking = 'face'
+        } else{
+            mouse_pos.x = event.clientX
+            mouse_pos.y = event.clientY
+            mouse_pos.tracking = 'cube'   
+        }
+    }
     
     var setupEventListeners = function(){
-        document.addEventListener('mousedown touchstart', function(event) {
-            element_first_class = event.target.className.split(' ')[0]
-            if (element_first_class=='plastic'){
-                return 0
-            }
-            if (element_first_class=='sticker'){
-                mouse_pos.sticker_el = event.target
-                mouse_pos.x = event.clientX
-                mouse_pos.y = event.clientY
-                mouse_pos.tracking = 'face'
-            } else{
-                mouse_pos.x = event.clientX
-                mouse_pos.y = event.clientY
-                mouse_pos.tracking = 'cube'   
-            }
+        document.addEventListener('mousedown', function(event) {
+            startTrack(event)
         });  
+        document.addEventListener('touchstart', function(event) {
+            startTrack(event)
+        }); 
         document.addEventListener('mouseup', function(event) {
             mouse_pos.x = event.clientX
             mouse_pos.y = event.clientY
