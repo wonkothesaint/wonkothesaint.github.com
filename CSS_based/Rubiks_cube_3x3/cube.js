@@ -388,7 +388,7 @@ var controller = (function(CubeCtrl, UICtrl) {
     
     
     var setupEventListeners = function(){
-        document.addEventListener('mousedown', function(event) {
+        document.addEventListener('mousedown touchstart', function(event) {
             element_first_class = event.target.className.split(' ')[0]
             if (element_first_class=='plastic'){
                 return 0
@@ -404,9 +404,6 @@ var controller = (function(CubeCtrl, UICtrl) {
                 mouse_pos.tracking = 'cube'   
             }
         });  
-        document.addEventListener('touchstart', function(event) {
-            UICtrl.rotateCube({x:0, y:0}, {x:10,y:0})  
-        });
         document.addEventListener('mouseup', function(event) {
             mouse_pos.x = event.clientX
             mouse_pos.y = event.clientY
