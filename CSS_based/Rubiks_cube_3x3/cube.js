@@ -20,9 +20,6 @@ var CubeController = (function() {
     
     return{
         init: function(){
-//            piecesXyz.pos.x = [0, 100,200,0,  100,200,0,  100,200,0,  100,200,0,  100,200,0,  100,200,0,  100,200,0,  100,200,0,  100,200]
-//            piecesXyz.pos.y = [0, 0,  0,  100,100,100,200,200,200,0,  0,  0,  100,100,100,200,200,200,0,  0,  0,  100,100,100,200,200,200]
-//            piecesXyz.pos.z = [0, 0,  0,  0,  0,  0,  0,  0,  0,  100,100,100,100,100,100,100,100,100,200,200,200,200,200,200,200,200,200]
             piecesXyz.pos.x = [-100, 0,100,-100,0,100,-100,0,100,-100,0,100,-100,0,100,-100,0,100,-100,0,100,-100,0,100,-100,0,100]
             piecesXyz.pos.y = [-100,-100,-100,0,0,0,100,100,100,-100,-100,-100,0,0,0,100,100,100,-100,-100,-100,0,0,0,100,100,100]
             piecesXyz.pos.z = [-100,-100,-100,-100,-100,-100,-100,-100,-100,0,0,0,0,0,0,0,0,0,100,100,100,100,100,100,100,100,100]
@@ -197,7 +194,7 @@ var UIController = (function() {
             z: piece_rot[0][2]*plastic_xyz.x+piece_rot[1][2]*plastic_xyz.y+piece_rot[2][2]*plastic_xyz.z
         }
         
-        console.log(piece_xyz,plastic_xyz_after_rot)
+//        console.log(piece_xyz,plastic_xyz_after_rot)
         
         sumx = piece_xyz.x+plastic_xyz_after_rot.x
         sumy = piece_xyz.y+plastic_xyz_after_rot.y
@@ -224,8 +221,6 @@ var UIController = (function() {
         }
         
 
-//        rotatedDir = [(cubeRotation[0][0]+cubeRotation[0][1]+cubeRotation[0][2])*grad_x,
-//                      (cubeRotation[1][0]+cubeRotation[1][1]+cubeRotation[1][2])*grad_y]
         gradDir = [cubeRotation[0][0]*grad_x+cubeRotation[0][1]*grad_y,
                    cubeRotation[1][0]*grad_x+cubeRotation[1][1]*grad_y,
                    cubeRotation[2][0]*grad_x+cubeRotation[2][1]*grad_y]
@@ -234,11 +229,8 @@ var UIController = (function() {
         projectionDir = crossProduct(stickerDir,crossProduct(gradDir,stickerDir))
         rotationDir = crossProduct(stickerDir,projectionDir)
         maxAbs = Math.max.apply(null, rotationDir.map(Math.abs))
-//        
-//        console.log(stickerDir, sumx,sumy,sumz)
-//        console.log(projectionDir)
-//        console.log(rotationDir)
-//        console.log(piece_xyz)
+
+        
         if (Math.abs(rotationDir[0]) == maxAbs ){
             if (rotationDir[0] == maxAbs){
                 return [{x:1,y:0,z:0},piece_xyz.x]
@@ -263,33 +255,17 @@ var UIController = (function() {
     }
     
     var rotatePieces = function(rotationDir, distance, angle){
-        console.log(rotationDir, distance, angle)
+//        console.log(rotationDir, distance, angle)
         for (id = 0; id < 27; id++) { //loop over pieces
             piece_el = document.getElementById('piece-'+id)
             pieceTransform = window.getComputedStyle(piece_el).transform
             pieceXyz = getXyzFromTransform(pieceTransform)
             projection = pieceXyz.x*rotationDir.x+pieceXyz.y*rotationDir.y+pieceXyz.z*rotationDir.z
             
-//            console.log(pieceXyz , rotationDir)
-//            console.log(projection , distance)
             if (projection > distance - 0.1 && projection < distance + 0.1)
             {
                 piece_el.style.transform = 'rotate3d('+rotationDir.x+','+rotationDir.y+','+rotationDir.z+','+angle+'deg)' + pieceTransform
             }
-//                
-//                pieceTransformMat = pieceTransform.replace(/\s/g, '').split(',')
-//                if (pieceTransformMat.length==6){
-//                    pieceTransformMat[0] = pieceTransformMat[0].slice(7)
-//                    pieceTransformMat[5] = pieceTransformMat[5].replace(')','')
-//                }
-//                if (pieceTransformMat.length==16){
-//                    pieceTransformMat[0] = pieceTransformMat[0].slice(9)
-//                    pieceTransformMat[15] = pieceTransformMat[15].replace(')','')
-//                }
-//                z = 
-
-
-//            piece_el.style.transform = 'rotate3d('+rotation[0]+','+rotation[1]+','+rotation[2]+','+rotation[3]+'deg)' + pieceTransform
         }
 
     }
@@ -368,9 +344,6 @@ var UIController = (function() {
             gradY = currPos.y - prevPos.y
             rotation = getRotation(stickerEl,gradX,gradY)
             rotatePieces(rotation[0], rotation[1], 90)
-            
-            
-            
         }
         
     }
@@ -384,7 +357,10 @@ var controller = (function(CubeCtrl, UICtrl) {
         x: 0,
         y: 0
     }
-        var startTrack = function(event){
+    
+    var applyTrackThreshold = 5
+    
+    var startTrack = function(event){
         element_first_class = event.target.className.split(' ')[0]
         if (element_first_class=='plastic'){
             return 0
@@ -408,6 +384,10 @@ var controller = (function(CubeCtrl, UICtrl) {
     }
     
     var applyTrack = function(event){
+        if (Math.abs(event.clientX + event.clientY -mouse_pos.x - mouse_pos.y)< applyTrackThreshold){
+            return 0
+        }
+        
         if (mouse_pos.tracking == 'cube'){
             UICtrl.rotateCube({x:event.clientX, y:event.clientY}, {x:mouse_pos.x,y:mouse_pos.y})
             mouse_pos.x = event.clientX
