@@ -425,23 +425,24 @@ var controller = (function(CubeCtrl, UICtrl) {
         document.addEventListener('mousedown', function(event) {
             startTrack(event)
         });  
-        document.addEventListener('touchstart', function(event) {
-            startTrack(event)
-        }); 
-        document.addEventListener('mouseup', function(event) {
-            stopTrack(event)
-        });  
-        document.addEventListener('touchend touchleave touchcancel', function(event) {
-            stopTrack(event)
-        });  
-        
         document.addEventListener('mousemove', function(event) {
             applyTrack(event)
         });  
+        document.addEventListener('mouseup', function(event) {
+            stopTrack(event)
+        });  
+        document.addEventListener('touchstart', function(event) {
+            UICtrl.rotateCube({x:0, y:0}, {x:10,y:0})
+            startTrack(event)
+        }); 
         document.addEventListener('touchmove', function(event) {
+            UICtrl.rotateCube({x:0, y:0}, {x:0,y:10})
             applyTrack(event)
         });  
-        
+        document.addEventListener('touchend touchleave touchcancel', function(event) {
+            UICtrl.rotateCube({x:0, y:0}, {x:10,y:10})
+            stopTrack(event)
+        });  
     }
     
     return {
