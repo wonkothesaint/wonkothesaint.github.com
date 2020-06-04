@@ -432,15 +432,15 @@ var controller = (function(CubeCtrl, UICtrl) {
             stopTrack(event)
         });  
         document.addEventListener('touchstart', function(event) {
-            UICtrl.rotateCube({x:0, y:0}, {x:10,y:0})
+//            UICtrl.rotateCube({x:0, y:0}, {x:10,y:0})
             startTrack(event)
         }); 
         document.addEventListener('touchmove', function(event) {
-            UICtrl.rotateCube({x:0, y:0}, {x:0,y:10})
+//            UICtrl.rotateCube({x:0, y:0}, {x:0,y:10})
             applyTrack(event)
         });  
-        document.addEventListener('touchend touchleave touchcancel', function(event) {
-            UICtrl.rotateCube({x:0, y:0}, {x:10,y:10})
+        document.addEventListener('touchend', function(event) {
+//            UICtrl.rotateCube({x:0, y:0}, {x:10,y:10})
             stopTrack(event)
         });  
     }
